@@ -1,6 +1,6 @@
 import * as request from "request-promise";
 import {Dictionary} from "./dictionary";
-import Bluebird = require("bluebird");
+import * as Bluebird from "bluebird";
 
 interface ItunesResponse {
     resultCount: number;

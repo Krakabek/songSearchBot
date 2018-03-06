@@ -1,6 +1,6 @@
 import {SearchAMusic} from "./apple-music";
+import * as Telegraf from "telegraf";
 
-const Telegraf = require("telegraf");
 const token = "ask Krakabek";
 
 const bot = new Telegraf(token);
