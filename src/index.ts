@@ -1,7 +1,7 @@
 import {SearchAMusic} from "./apple-music";
 
 const Telegraf = require("telegraf");
-const token = "569551045:AAFwKVYioRaTwlHNuaA-qjo7G-uj0ClBzCM";
+const token = "ask Krakabek";
 
 const bot = new Telegraf(token);
 const commandRegexp = /\/songlink /;
