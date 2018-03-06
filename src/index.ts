@@ -10,6 +10,6 @@ bot.hears(commandRegexp, (ctx: any) => {
     const songName = ctx.message.text.replace(commandRegexp, "");
     SearchAMusic(songName).then((result) => {
         ctx.reply(result + "\n");
-    })
+    });
 });
 bot.startPolling();

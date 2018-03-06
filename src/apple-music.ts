@@ -5,7 +5,7 @@ import Bluebird = require("bluebird");
 interface ItunesResponse {
     resultCount: number;
     results: Array<any>;
-};
+}
 
 export function SearchAMusic(songname: string): Bluebird<string> {
     const formattedName = songname.replace(/\s/mg, "+");
