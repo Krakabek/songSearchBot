@@ -1,11 +1,11 @@
 import * as request from "request-promise";
 import {Dictionary} from "./dictionary";
-import Bluebird = require("bluebird");
+import * as Bluebird from "bluebird";
 
 interface ItunesResponse {
     resultCount: number;
     results: Array<any>;
-};
+}
 
 export function SearchAMusic(songname: string): Bluebird<string> {
     const formattedName = songname.replace(/\s/mg, "+");

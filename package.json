@@ -13,7 +13,8 @@
     "test-watch": "jest --watchAll"
   },
   "dependencies": {
-    "@types/node": "^9.4.6",
+    "@types/bluebird": "^3.5.20",
+    "@types/node": "^8.9.4",
     "@types/request-promise": "^4.1.41",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
