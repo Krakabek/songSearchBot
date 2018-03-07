@@ -1,7 +1,8 @@
+import {config} from "./config";
 import {SearchAMusic} from "./apple-music";
 import * as Telegraf from "telegraf";
 
-const token = "ask Krakabek";
+const token = config.telegramToken;
 
 const bot = new Telegraf(token);
 const commandRegexp = /\/songlink /;
