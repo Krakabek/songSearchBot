@@ -61,3 +61,6 @@ typings/
 .idea/
 
 dist
+
+src/config.ts
+app-bundle.zip

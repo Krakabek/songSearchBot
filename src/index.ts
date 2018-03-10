@@ -3,8 +3,12 @@ import {SearchAMusic} from "./apple-music";
 import {config} from "./config";
 import {SearchSpotify} from "./spotify";
 
-const token = config.telegramToken;
+const packageConfig = require("../package.json");
 
+const startDate = new Date();
+console.warn(`Start server v${packageConfig.version} (${startDate})`);
+
+const token = config.telegramToken;
 const bot = new Telegraf(token);
 const commandRegexp = /\/songlink /;
 
