@@ -45,7 +45,7 @@ function getAuth(): Bluebird<boolean> {
         token = response.access_token;
         const reAuthDelay = response.expires_in - 60;
         setTimeout(() => {
-            getAuth()
+            token = "";
         }, reAuthDelay * 1000);
         return true;
     }).catch((err) => {
