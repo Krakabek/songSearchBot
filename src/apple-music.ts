@@ -1,6 +1,7 @@
 import * as request from "request-promise";
 import {Dictionary} from "./dictionary";
 import * as Bluebird from "bluebird";
+import {formatQuery} from "./query-formatter";
 
 interface ItunesResponse {
     resultCount: number;
@@ -8,7 +9,7 @@ interface ItunesResponse {
 }
 
 export function SearchAMusic(songname: string): Bluebird<string> {
-    const formattedName = songname.replace(/\s/mg, "+");
+    const formattedName = formatQuery(songname);
     const requestUrl = `https://itunes.apple.com/search?term=${formattedName}&country=ua`;
     return request.get(requestUrl)
         .then((res: string) => {
@@ -22,7 +23,6 @@ export function SearchAMusic(songname: string): Bluebird<string> {
             } catch (e) {
                 return Dictionary.parsing_error;
             }
-
         })
         .catch(() => {
             return Dictionary.request_error;

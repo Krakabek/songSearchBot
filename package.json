@@ -16,11 +16,13 @@
     "@types/bluebird": "^3.5.20",
     "@types/node": "^8.9.4",
     "@types/request-promise": "^4.1.41",
+    "base-64": "^0.1.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "telegraf": "^3.19.0",
     "tslib": "^1.9.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^22.2.0",
