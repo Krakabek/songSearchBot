@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "@types/bluebird": "^3.5.20",
+    "@types/cheerio": "^0.22.7",
     "@types/node": "^8.9.4",
     "@types/request-promise": "^4.1.41",
     "base-64": "^0.1.0",
+    "cheerio": "^1.0.0-rc.2",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "telegraf": "^3.19.0",

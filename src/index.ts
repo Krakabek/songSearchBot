@@ -2,6 +2,7 @@ import * as Telegraf from "telegraf";
 import {config} from "./config";
 import {SearchAMusic} from "./providers/apple-music";
 import {SearchSpotify} from "./providers/spotify";
+import {SearchGMusic} from "./providers/google-play";
 
 const packageConfig = require("../package.json");
 
@@ -16,8 +17,10 @@ bot.hears(commandRegexp, (ctx: any) => {
     const songName = ctx.message.text.replace(commandRegexp, "");
     const services = [
         SearchAMusic(songName),
-        SearchSpotify(songName)
+        SearchSpotify(songName),
+        SearchGMusic(songName)
     ];
+
     Promise.all(services).then((results) => {
         const reply = results.reduce((buffer, res) => {
             return buffer + res + "\n";
