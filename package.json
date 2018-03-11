@@ -12,7 +12,7 @@
     "build": "tsc",
     "test": "jest",
     "test-watch": "jest --watchAll",
-    "pack": "npm run build && zip app-`date -u +\"%Y%m%d%H%M\"`.zip package.json dist/*"
+    "pack": "npm run build && zip -r app-`date -u +\"%Y%m%d%H%M\"`.zip package.json dist/*"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.20",
