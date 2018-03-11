@@ -16,7 +16,7 @@ interface SpotifyResponse {
             }
         }>,
         total: number
-    }
+    };
 }
 
 interface SpotifyAuthResponse {
@@ -24,7 +24,6 @@ interface SpotifyAuthResponse {
     "token_type": string;
     "expires_in": number;
 }
-
 
 function getAuth(): Bluebird<boolean> {
     // <base64 encoded client_id:client_secret>
@@ -43,10 +42,12 @@ function getAuth(): Bluebird<boolean> {
         json: true
     }).then((response: SpotifyAuthResponse) => {
         token = response.access_token;
-        const reAuthDelay = response.expires_in - 60;
+        const oneMinute = 60;
+        const msInMin = 1000;
+        const reAuthDelay = response.expires_in - oneMinute;
         setTimeout(() => {
             token = "";
-        }, reAuthDelay * 1000);
+        }, reAuthDelay * msInMin);
         return true;
     }).catch((err) => {
         return false;
