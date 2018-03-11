@@ -1,7 +1,7 @@
 import * as request from "request-promise";
-import {Dictionary} from "./dictionary";
 import * as Bluebird from "bluebird";
-import {formatQuery} from "./query-formatter";
+import {Dictionary} from "../dictionary";
+import {formatQuery} from "../query-formatter";
 
 interface ItunesResponse {
     resultCount: number;

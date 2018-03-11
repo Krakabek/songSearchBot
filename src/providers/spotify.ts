@@ -2,9 +2,9 @@ import * as base64 from "base-64";
 import * as Bluebird from "bluebird";
 import * as request from "request-promise";
 import * as utf8 from "utf8";
-import {config} from "./config";
-import {Dictionary} from "./dictionary";
-import {formatQuery} from "./query-formatter";
+import {config} from "../config";
+import {Dictionary} from "../dictionary";
+import {formatQuery} from "../query-formatter";
 
 let token = "";
 

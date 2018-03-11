@@ -1,7 +1,7 @@
 import * as Telegraf from "telegraf";
-import {SearchAMusic} from "./apple-music";
 import {config} from "./config";
-import {SearchSpotify} from "./spotify";
+import {SearchAMusic} from "./providers/apple-music";
+import {SearchSpotify} from "./providers/spotify";
 
 const packageConfig = require("../package.json");
 
