@@ -1,8 +1,8 @@
 import * as Telegraf from "telegraf";
 import {config} from "./config";
 import {SearchAMusic} from "./providers/apple-music";
-import {SearchSpotify} from "./providers/spotify";
 import {SearchGMusic} from "./providers/google-play";
+import {SearchSpotify} from "./providers/spotify";
 
 const packageConfig = require("../package.json");
 
@@ -26,6 +26,7 @@ bot.hears(commandRegexp, (ctx: any) => {
             return buffer + res + "\n";
         }, songName + ":\n");
         ctx.reply(reply, {
+            parse_mode: "Markdown",
             disable_web_page_preview: true
         });
     });

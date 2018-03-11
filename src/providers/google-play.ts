@@ -2,7 +2,7 @@ import * as Bluebird from "bluebird";
 import * as cheerio from "cheerio";
 import * as request from "request-promise";
 import {Dictionary} from "../dictionary";
-import {formatQuery} from "../query-formatter";
+import {formatQuery, formatResponse} from "../formatter";
 
 const baseUrl = "https://play.google.com";
 
@@ -43,6 +43,6 @@ export function SearchGMusic(songname: string): Bluebird<string> {
             return Dictionary.request_error;
         })
         .then((result) => {
-            return `Google Play Music: ${result}`;
+            return formatResponse("Google Play Music", result);
         });
 }

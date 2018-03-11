@@ -4,7 +4,7 @@ import * as request from "request-promise";
 import * as utf8 from "utf8";
 import {config} from "../config";
 import {Dictionary} from "../dictionary";
-import {formatQuery} from "../query-formatter";
+import {formatQuery, formatResponse} from "../formatter";
 
 let token = "";
 
@@ -88,6 +88,6 @@ export function SearchSpotify(songname: string): Bluebird<string> {
             return Dictionary.request_error;
         })
         .then((result) => {
-            return `Spotify: ${result}`;
+            return formatResponse("Spotify", result);
         });
 }

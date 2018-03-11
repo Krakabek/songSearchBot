@@ -1,7 +1,7 @@
 import * as request from "request-promise";
 import * as Bluebird from "bluebird";
 import {Dictionary} from "../dictionary";
-import {formatQuery} from "../query-formatter";
+import {formatQuery, formatResponse} from "../formatter";
 
 interface ItunesResponse {
     resultCount: number;
@@ -28,7 +28,7 @@ export function SearchAMusic(songname: string): Bluebird<string> {
             return Dictionary.request_error;
         })
         .then((result) => {
-            return `Apple Music: ${result}`;
+            return formatResponse("Apple Music", result);
         });
 
 }
