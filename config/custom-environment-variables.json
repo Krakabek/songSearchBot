@@ -2,6 +2,6 @@
   "telegramToken": "TSSB_TELEGRAM_TOKEN",
   "spotify": {
     "clientId": "TSSB_SPOTIFY_ID",
-    "clientSecret": "TSSB_SPOTIFY_ID"
+    "clientSecret": "TSSB_SPOTIFY_SECRET"
   }
 }
