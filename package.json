@@ -1,6 +1,6 @@
 {
   "name": "telegram-songsearchbot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Searches for music in popular streaming platforms (and youtube) to allow better UX of music sharing in telegram chats",
   "main": "dist/index.js",
   "scripts": {
