@@ -1,0 +1,5 @@
+*
+!.gitignore
+!custom-environment-variables.json
+!local.sample.json
+!production.json

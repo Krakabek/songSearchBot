@@ -9,7 +9,7 @@
     "lint": "tslint -p ./ --force --format stylish",
     "ts-watch": "tsc --watch --pretty",
     "lint-watch": "onchange './src/**/*.ts' -d 300 -- npm run lint",
-    "build": "tsc",
+    "build": "NODE_ENV=production && tsc",
     "test": "jest",
     "test-watch": "jest --watchAll",
     "pack": "npm run build && zip -r app-`date -u +\"%Y%m%d%H%M\"`.zip package.json dist/*"
@@ -17,10 +17,12 @@
   "dependencies": {
     "@types/bluebird": "^3.5.20",
     "@types/cheerio": "^0.22.7",
+    "@types/config": "0.0.34",
     "@types/node": "^8.9.4",
     "@types/request-promise": "^4.1.41",
     "base-64": "^0.1.0",
     "cheerio": "^1.0.0-rc.2",
+    "config": "^1.30.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "telegraf": "^3.19.0",

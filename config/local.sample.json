@@ -1,0 +1,8 @@
+{
+  "// copy me, rename to local.json and remove this comment lines": 0,
+  "telegramToken": "",
+  "spotify": {
+    "clientId": "",
+    "clientSecret": ""
+  }
+}

@@ -1,5 +1,5 @@
 import * as Telegraf from "telegraf";
-import {config} from "./config";
+import * as config from "config";
 import {SearchAMusic} from "./providers/apple-music";
 import {SearchGMusic} from "./providers/google-play";
 import {SearchSpotify} from "./providers/spotify";
@@ -9,7 +9,7 @@ const packageConfig = require("../package.json");
 const startDate = new Date();
 console.warn(`Start server v${packageConfig.version} (${startDate})`);
 
-const token = config.telegramToken;
+const token = config.get("telegramToken");
 const bot = new Telegraf(token);
 const commandRegexp = /\/songlink /;
 
