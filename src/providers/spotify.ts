@@ -2,7 +2,7 @@ import * as base64 from "base-64";
 import * as Bluebird from "bluebird";
 import * as request from "request-promise";
 import * as utf8 from "utf8";
-import {config} from "../config";
+import * as config from "config";
 import {Dictionary} from "../dictionary";
 import {formatQuery, formatResponse} from "../formatter";
 
@@ -27,7 +27,7 @@ interface SpotifyAuthResponse {
 
 function getAuth(): Bluebird<boolean> {
     // <base64 encoded client_id:client_secret>
-    const keys = `${config.spotify.clientId}:${config.spotify.clientSecret}`;
+    const keys = `${config.get("spotify.clientId")}:${config.get("spotify.clientSecret")}`;
     const encodedKeys = base64.encode(utf8.encode(keys));
     return request({
         method: "POST",
