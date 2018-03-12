@@ -15,6 +15,9 @@ const commandRegexp = /\/songlink /;
 
 bot.hears(commandRegexp, (ctx: any) => {
     const songName = ctx.message.text.replace(commandRegexp, "");
+
+    console.warn(`==> request: ${songName} | ${new Date()}`);
+
     const services = [
         SearchAMusic(songName),
         SearchSpotify(songName),
