@@ -3,6 +3,7 @@ import * as cheerio from "cheerio";
 import * as request from "request-promise";
 import {Dictionary} from "../dictionary";
 import {formatQuery, formatResponse} from "../formatter";
+import {ProviderResponse} from "./interfaces";
 
 const baseUrl = "https://play.google.com";
 
@@ -10,7 +11,7 @@ function getStoreUrl(part: string): string {
     return `${baseUrl}${part}`;
 }
 
-export function SearchGMusic(songname: string): Bluebird<string> {
+export function SearchGMusic(songname: string): Bluebird<ProviderResponse> {
     const formattedName = formatQuery(songname);
     const requestUrl = getStoreUrl(`/store/search?c=music&q=${formattedName}`);
 
@@ -43,6 +44,9 @@ export function SearchGMusic(songname: string): Bluebird<string> {
             return Dictionary.request_error;
         })
         .then((result) => {
-            return formatResponse("Google Play Music", result);
+            return {
+                url: formatResponse("Google Play Music", result),
+                albumCover: ""
+            };
         });
 }
