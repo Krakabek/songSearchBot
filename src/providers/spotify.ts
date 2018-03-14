@@ -1,10 +1,11 @@
 import * as base64 from "base-64";
 import * as Bluebird from "bluebird";
+import * as config from "config";
 import * as request from "request-promise";
 import * as utf8 from "utf8";
-import * as config from "config";
 import {Dictionary} from "../dictionary";
 import {formatQuery, formatResponse} from "../formatter";
+import {ProviderResponse} from "./interfaces";
 
 let token = "";
 
@@ -13,6 +14,9 @@ interface SpotifyResponse {
         items: Array<{
             external_urls: {
                 spotify: string
+            },
+            album: {
+                images: Array<{ url: string }>
             }
         }>,
         total: number
@@ -54,18 +58,22 @@ function getAuth(): Bluebird<boolean> {
     });
 }
 
-export function SearchSpotify(songname: string): Bluebird<string> {
+export function SearchSpotify(songname: string): Bluebird<ProviderResponse> {
     if (!token) {
         return getAuth().then((res) => {
             if (res) {
                 return SearchSpotify(songname);
             } else {
-                return `Spotify: ${Dictionary.request_error}`;
+                return {
+                    url: `Spotify: ${Dictionary.request_error}`,
+                    albumCover: artwork
+                };
             }
         });
     }
     const formattedName = formatQuery(songname);
     const requestUrl = `https://api.spotify.com/v1/search?q=${formattedName}&type=track&limit=1`;
+    let artwork = "";
     return request.get(requestUrl, {
         headers: {
             Authorization: `Bearer ${token}`
@@ -75,6 +83,9 @@ export function SearchSpotify(songname: string): Bluebird<string> {
             try {
                 const parsedRes = JSON.parse(res) as SpotifyResponse;
                 if (parsedRes.tracks.total) {
+                    if (parsedRes.tracks.items[0].album.images[0]) {
+                        artwork = parsedRes.tracks.items[0].album.images[0].url;
+                    }
                     return parsedRes.tracks.items[0].external_urls.spotify;
                 } else {
                     return Dictionary.no_result;
@@ -88,6 +99,9 @@ export function SearchSpotify(songname: string): Bluebird<string> {
             return Dictionary.request_error;
         })
         .then((result) => {
-            return formatResponse("Spotify", result);
+            return {
+                url: formatResponse("Spotify Music", result),
+                albumCover: artwork
+            };
         });
 }
