@@ -100,7 +100,7 @@ export function SearchSpotify(songname: string): Bluebird<ProviderResponse> {
         })
         .then((result) => {
             return {
-                url: formatResponse("Spotify Music", result),
+                url: formatResponse("Spotify", result),
                 albumCover: artwork
             };
         });
