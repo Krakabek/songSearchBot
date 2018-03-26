@@ -3,6 +3,7 @@ import * as Telegraf from "telegraf";
 import {SearchAMusic} from "./providers/apple-music";
 import {SearchGMusic} from "./providers/google-play";
 import {SearchSpotify} from "./providers/spotify";
+import {SearchYoutube} from "./providers/youtube";
 
 const packageConfig = require("../package.json");
 
@@ -13,18 +14,19 @@ const token = config.get("telegramToken");
 const bot = new Telegraf(token);
 const commandRegexp = /\/songlink /;
 
+const getServices = (songName: string) => [
+    SearchAMusic(songName),
+    SearchSpotify(songName),
+    SearchGMusic(songName),
+    SearchYoutube(songName)
+];
+
 bot.hears(commandRegexp, (ctx: any) => {
     const songName = ctx.message.text.replace(commandRegexp, "");
 
     console.warn(`==> request: ${songName} | ${new Date()}`);
 
-    const services = [
-        SearchAMusic(songName),
-        SearchSpotify(songName),
-        SearchGMusic(songName)
-    ];
-
-    Promise.all(services).then((results) => {
+    Promise.all(getServices(songName)).then((results) => {
         const reply = results.reduce((buffer, res) => {
             return buffer + res.url + "\n";
         }, songName + ":\n");
@@ -36,7 +38,6 @@ bot.hears(commandRegexp, (ctx: any) => {
 });
 
 bot.on("inline_query", (ctx: any) => {
-
     const songName = ctx.inlineQuery.query;
 
     if (!songName) {
@@ -45,13 +46,7 @@ bot.on("inline_query", (ctx: any) => {
 
     console.warn(`==> request: ${songName} | ${new Date()}`);
 
-    const services = [
-        SearchAMusic(songName),
-        SearchSpotify(songName),
-        SearchGMusic(songName)
-    ];
-
-    Promise.all(services).then((results) => {
+    Promise.all(getServices(songName)).then((results) => {
         let thumbnail = "";
         const reply = results.reduce((buffer, res) => {
             if (res.albumCover && !thumbnail) {
