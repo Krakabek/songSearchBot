@@ -13,7 +13,9 @@ function getStoreUrl(part: string): string {
 
 function getShareUrl(songId: string, songName: string, artistName: string): string {
     const tParam = `${songName} - ${artistName}`;
-    const tParamEncoded = tParam.replace(/\s/g, "_");
+    const tParamEncoded = tParam
+        .replace(/\s/g, "+")
+        .replace(/[()]/g, "+");
 
     return `${baseUrl}/music/m/${songId}?t=${tParamEncoded}`;
 }
