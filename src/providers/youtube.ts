@@ -1,17 +1,23 @@
 import {ProviderResponse} from "./interfaces";
 import {formatQuery, formatResponse} from "../formatter";
 
-export function SearchYoutube(songname: string): Promise<ProviderResponse> {
+function makeSearchLink(query: string): string {
+    const url = "https://www.youtube.com/results";
+    const params = [
+        `search_query=${formatQuery(query)}`,
+        "page=",
+        "utm_source=opensearch",
+    ];
+    const fullUrl = url + "?" + params.join("&");
+
+    return fullUrl.replace(/[\n\s]/g, "");
+}
+
+export function SearchYoutube(songName: string): Promise<ProviderResponse> {
     return Promise.resolve()
         .then(() => {
-            const youtubeSearchLink = `
-                https://www.youtube.com/results?
-                search_query=${formatQuery(songname)}
-                &page=&utm_source=opensearch
-            `.replace(/[\n\s]/g, "");
-
             return {
-                url: formatResponse("YouTube", youtubeSearchLink),
+                url: formatResponse("YouTube", makeSearchLink(songName)),
                 albumCover: ""
             };
         });
