@@ -1,5 +1,4 @@
 import * as base64 from "base-64";
-import * as Bluebird from "bluebird";
 import * as config from "config";
 import * as request from "request-promise";
 import * as utf8 from "utf8";
@@ -29,7 +28,7 @@ interface SpotifyAuthResponse {
     "expires_in": number;
 }
 
-function getAuth(): Bluebird<boolean> {
+function getAuth(): Promise<boolean> {
     // <base64 encoded client_id:client_secret>
     const keys = `${config.get("spotify.clientId")}:${config.get("spotify.clientSecret")}`;
     const encodedKeys = base64.encode(utf8.encode(keys));
@@ -58,7 +57,7 @@ function getAuth(): Bluebird<boolean> {
     });
 }
 
-export function SearchSpotify(songname: string): Bluebird<ProviderResponse> {
+export function SearchSpotify(songname: string): Promise<ProviderResponse> {
     if (!token) {
         return getAuth().then((res) => {
             if (res) {

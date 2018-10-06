@@ -1,5 +1,4 @@
 import * as request from "request-promise";
-import * as Bluebird from "bluebird";
 import {Dictionary} from "../dictionary";
 import {formatQuery, formatResponse} from "../formatter";
 import {ProviderResponse} from "./interfaces";
@@ -9,7 +8,7 @@ interface ItunesResponse {
     results: Array<any>;
 }
 
-export function SearchAMusic(songname: string): Bluebird<ProviderResponse> {
+export function SearchAMusic(songname: string): Promise<ProviderResponse> {
     const formattedName = formatQuery(songname);
     const requestUrl = `https://itunes.apple.com/search?term=${formattedName}&country=ua`;
     let artwork = "";

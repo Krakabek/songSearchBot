@@ -1,4 +1,3 @@
-import * as Bluebird from "bluebird";
 import * as cheerio from "cheerio";
 import * as request from "request-promise";
 import {Dictionary} from "../dictionary";
@@ -20,7 +19,7 @@ function getShareUrl(songId: string, songName: string, artistName: string): stri
     return `${baseUrl}/music/m/${songId}?t=${tParamEncoded}`;
 }
 
-export function SearchGMusic(songname: string): Bluebird<ProviderResponse> {
+export function SearchGMusic(songname: string): Promise<ProviderResponse> {
     const formattedName = formatQuery(songname);
     const requestUrl = getStoreUrl(`/store/search?c=music&q=${formattedName}`);
 
