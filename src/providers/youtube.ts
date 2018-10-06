@@ -1,16 +1,16 @@
 import {ProviderResponse} from "./interfaces";
-import {formatQuery, formatResponse} from "../formatter";
+import {formatResponse} from "../formatter";
+import * as qs from "qs";
 
 function makeSearchLink(query: string): string {
     const url = "https://www.youtube.com/results";
-    const params = [
-        `search_query=${formatQuery(query)}`,
-        "page=",
-        "utm_source=opensearch",
-    ];
-    const fullUrl = url + "?" + params.join("&");
+    const params = qs.stringify({
+        search_query: query,
+        page: "",
+        utm_source: "opensearch"
+    });
 
-    return fullUrl.replace(/[\n\s]/g, "");
+    return `${url}?${params}`;
 }
 
 export function SearchYoutube(songName: string): Promise<ProviderResponse> {

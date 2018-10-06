@@ -1,9 +1,14 @@
 import {ProviderResponse} from "./interfaces";
-import {formatQuery, formatResponse} from "../formatter";
+import {formatResponse} from "../formatter";
+import * as qs from "qs";
 
 function makeSearchLink(query: string): string {
-    return `https://soundcloud.com/search/sounds?q=${formatQuery(query)}
-            `.replace(/[\n\s]/g, "");
+    const url = "https://soundcloud.com/search/sounds";
+    const params = qs.stringify({
+        q: query,
+    });
+
+    return `${url}?${params}`;
 }
 
 export function SearchSoundCloud(songName: string):  Promise<ProviderResponse> {
