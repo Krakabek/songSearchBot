@@ -1,5 +1,5 @@
 import {ProviderResponse} from "./interfaces";
-import {formatResponse} from "../formatter";
+import {formatResponse} from "../core/response";
 import * as qs from "qs";
 
 function makeSearchLink(query: string): string {

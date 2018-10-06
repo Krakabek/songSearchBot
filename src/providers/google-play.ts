@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
-import {Dictionary} from "../dictionary";
-import {formatResponse} from "../formatter";
+import {Dictionary} from "../core/dictionary";
+import {formatResponse} from "../core/response";
 import {ProviderResponse} from "./interfaces";
 import Axios from "axios";
 

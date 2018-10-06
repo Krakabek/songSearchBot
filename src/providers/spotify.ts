@@ -1,8 +1,8 @@
 import * as base64 from "base-64";
 import * as config from "config";
 import * as utf8 from "utf8";
-import {Dictionary} from "../dictionary";
-import {formatResponse} from "../formatter";
+import {Dictionary} from "../core/dictionary";
+import {formatResponse} from "../core/response";
 import {ProviderResponse} from "./interfaces";
 import Axios from "axios";
 import * as querystring from "querystring";
