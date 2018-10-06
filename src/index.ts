@@ -4,6 +4,7 @@ import {SearchAMusic} from "./providers/apple-music";
 import {SearchGMusic} from "./providers/google-play";
 import {SearchSpotify} from "./providers/spotify";
 import {SearchYoutube} from "./providers/youtube";
+import {SearchSoundCloud} from "./providers/soundcloud";
 
 const packageConfig = require("../package.json");
 
@@ -18,7 +19,8 @@ const getServices = (songName: string) => [
     SearchAMusic(songName),
     SearchSpotify(songName),
     SearchGMusic(songName),
-    SearchYoutube(songName)
+    SearchYoutube(songName),
+    SearchSoundCloud(songName),
 ];
 
 bot.hears(commandRegexp, (ctx: any) => {
