@@ -11,34 +11,39 @@ function getStoreUrl(part: string): string {
     return `${baseUrl}${part}`;
 }
 
+function getShareUrl(songId: string, songName: string, artistName: string): string {
+    const tParam = `${songName} - ${artistName}`;
+    const tParamEncoded = tParam
+        .replace(/\s/g, "+")
+        .replace(/[()]/g, "+");
+
+    return `${baseUrl}/music/m/${songId}?t=${tParamEncoded}`;
+}
+
 export function SearchGMusic(songname: string): Bluebird<ProviderResponse> {
     const formattedName = formatQuery(songname);
     const requestUrl = getStoreUrl(`/store/search?c=music&q=${formattedName}`);
 
     return request.get(requestUrl)
-        .then((result: string) => {
-            if (result.indexOf("We couldn't find anything for your search") !== -1) {
+        .then((searchResult: string) => {
+            if (searchResult.indexOf("We couldn't find anything for your search") !== -1) {
                 return Dictionary.no_result;
             }
 
-            const musicLink = /href="(\/store\/music\/collection\/5:search_cluster:4.*?)"/ig;
-            const matches = musicLink.exec(result);
+            const $ = cheerio.load(searchResult);
+            const songDiv = $(`.card[data-docid^="song-"]`).first();
+            const songDocId = songDiv.attr("data-docid");
+            const songName = songDiv.find(".title").first().attr("title");
+            const artistName = songDiv.find(".subtitle").first().attr("title");
 
-            if (!matches) {
+            if (!songDocId) {
                 return Dictionary.parsing_error;
             }
 
-            return request.post(getStoreUrl(matches[1]))
-                .then((musicResult: string) => {
-                    const $ = cheerio.load(musicResult);
-                    const firstSongHref = $(".card-list .card .card-click-target").attr("href");
+            const prefixIndex = 5;
+            const songId = songDocId.slice(prefixIndex);
 
-                    if (!firstSongHref) {
-                        return Dictionary.no_result;
-                    }
-
-                    return getStoreUrl(firstSongHref);
-                });
+            return getShareUrl(songId, songName, artistName);
         })
         .catch(() => {
             return Dictionary.request_error;

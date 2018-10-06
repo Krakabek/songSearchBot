@@ -44,7 +44,7 @@ bot.on("inline_query", (ctx: any) => {
         return ctx.answerInlineQuery([]);
     }
 
-    console.warn(`==> request: ${songName} | ${new Date()}`);
+    console.warn(`==> request [${new Date()}]: ${songName}`);
 
     Promise.all(getServices(songName)).then((results) => {
         let thumbnail = "";
