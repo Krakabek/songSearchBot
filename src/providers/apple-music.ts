@@ -65,11 +65,17 @@ function getFilterOutLivePredicate(query: string): (entry: ResultsEntry) => bool
     };
 }
 
+function filterOutSongsPredicate(entry: ResultsEntry): boolean {
+    return entry.kind === "song";
+}
+
 function getMatchingEntryFromResult(query: string, entries: Array<ResultsEntry>): ResultsEntry | null {
     if (entries.length > 1) {
         const filterOutLivePredicate = getFilterOutLivePredicate(query);
 
-        entries = entries.filter(filterOutLivePredicate);
+        entries = entries
+            .filter(filterOutSongsPredicate)
+            .filter(filterOutLivePredicate);
 
         if (entries.length > 0) {
             return entries[0];
