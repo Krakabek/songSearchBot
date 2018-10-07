@@ -1,8 +1,7 @@
-import * as request from "request-promise";
-import * as Bluebird from "bluebird";
 import {Dictionary} from "../dictionary";
-import {formatQuery, formatResponse} from "../formatter";
+import {formatResponse} from "../formatter";
 import {ProviderResponse} from "./interfaces";
+import Axios from "axios";
 
 interface ResultsEntry {
     wrapperType: string;
@@ -81,22 +80,25 @@ function getMatchingEntryFromResult(query: string, entries: Array<ResultsEntry>)
     }
 }
 
-export function SearchAMusic(songname: string): Bluebird<ProviderResponse> {
-    const formattedName = formatQuery(songname);
-    const requestUrl = `https://itunes.apple.com/search?term=${formattedName}&country=ua`;
+const appleMusic = Axios.create({
+    baseURL: "https://itunes.apple.com",
+});
+
+export function SearchAMusic(songName: string): Promise<ProviderResponse> {
     let artwork = "";
 
-    return request.get(requestUrl)
-        .then((result: string) => {
-            try {
-                return JSON.parse(result) as ItunesResponse;
-            } catch (e) {
-                return Dictionary.parsing_error;
-            }
-        })
+    const searchTrack = appleMusic.get<ItunesResponse>(`/search`, {
+        params: {
+            term: songName,
+            country: "ua",
+        }
+    });
+
+    return searchTrack
+        .then((result) => result.data)
         .then((parsedResult: ItunesResponse) => {
             if (parsedResult.resultCount) {
-                const track = getMatchingEntryFromResult(songname, parsedResult.results);
+                const track = getMatchingEntryFromResult(songName, parsedResult.results);
 
                 if (track) {
                     artwork = track.artworkUrl100;
@@ -117,5 +119,4 @@ export function SearchAMusic(songname: string): Bluebird<ProviderResponse> {
                 albumCover: artwork
             };
         });
-
 }

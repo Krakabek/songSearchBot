@@ -1,16 +1,21 @@
-import * as Bluebird from "bluebird";
 import {ProviderResponse} from "./interfaces";
-import {formatQuery, formatResponse} from "../formatter";
+import {formatResponse} from "../formatter";
+import * as qs from "qs";
 
-export function SearchSoundCloud(songname: string):  Bluebird<ProviderResponse> {
-    return Bluebird.resolve()
+function makeSearchLink(query: string): string {
+    const url = "https://soundcloud.com/search/sounds";
+    const params = qs.stringify({
+        q: query,
+    });
+
+    return `${url}?${params}`;
+}
+
+export function SearchSoundCloud(songName: string):  Promise<ProviderResponse> {
+    return Promise.resolve()
         .then(() => {
-            const soundCloudSearchLink = `
-                https://soundcloud.com/search/sounds?
-                q=${formatQuery(songname)}
-            `.replace(/[\n\s]/g, "");
             return {
-                url: formatResponse("SoundCloud", soundCloudSearchLink),
+                url: formatResponse("SoundCloud", makeSearchLink(songName)),
                 albumCover: ""
             };
         });

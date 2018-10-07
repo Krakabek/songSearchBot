@@ -1,17 +1,23 @@
-import * as Bluebird from "bluebird";
 import {ProviderResponse} from "./interfaces";
-import {formatQuery, formatResponse} from "../formatter";
+import {formatResponse} from "../formatter";
+import * as qs from "qs";
 
-export function SearchYoutube(songname: string):  Bluebird<ProviderResponse> {
-    return Bluebird.resolve()
+function makeSearchLink(query: string): string {
+    const url = "https://www.youtube.com/results";
+    const params = qs.stringify({
+        search_query: query,
+        page: "",
+        utm_source: "opensearch"
+    });
+
+    return `${url}?${params}`;
+}
+
+export function SearchYoutube(songName: string): Promise<ProviderResponse> {
+    return Promise.resolve()
         .then(() => {
-            const youtubeSearchLink = `
-                https://www.youtube.com/results?
-                search_query=${formatQuery(songname)}
-                &page=&utm_source=opensearch
-            `.replace(/[\n\s]/g, "");
             return {
-                url: formatResponse("YouTube", youtubeSearchLink),
+                url: formatResponse("YouTube", makeSearchLink(songName)),
                 albumCover: ""
             };
         });
