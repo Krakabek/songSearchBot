@@ -1,7 +1,8 @@
 import {ProviderResponse} from "./interfaces";
 import Axios from "axios";
 import {Dictionary} from "../core/dictionary";
-import {createProviderResponder, formatResponse} from "../core/response";
+import {createProviderResponder} from "../core/response";
+import {logError} from "../core/logger";
 
 interface ResultsEntry {
     wrapperType: string;
@@ -88,15 +89,15 @@ const makeResponse = createProviderResponder("Apple Music");
 
 export async function SearchAMusic(songName: string): Promise<ProviderResponse> {
     try {
-        const searchTrack = await appleMusic.get<ItunesResponse>(`/search`, {
+        const tracks = await appleMusic.get<ItunesResponse>(`/search`, {
             params: {
                 term: songName,
                 country: "ua",
             }
         });
 
-        if (searchTrack.data.resultCount) {
-            const track = getMatchingEntryFromResult(songName, searchTrack.data.results);
+        if (tracks.data.resultCount) {
+            const track = getMatchingEntryFromResult(songName, tracks.data.results);
 
             if (track) {
                 return makeResponse(track.trackViewUrl, track.artworkUrl100);
@@ -105,6 +106,7 @@ export async function SearchAMusic(songName: string): Promise<ProviderResponse> 
             }
         }
     } catch (e) {
+        logError("Apple Music", e);
         return makeResponse(Dictionary.request_error);
     }
 
