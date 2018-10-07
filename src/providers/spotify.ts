@@ -1,13 +1,14 @@
 import * as base64 from "base-64";
-import * as Bluebird from "bluebird";
 import * as config from "config";
-import * as request from "request-promise";
 import * as utf8 from "utf8";
-import {Dictionary} from "../dictionary";
-import {formatQuery, formatResponse} from "../formatter";
+import {Dictionary} from "../core/dictionary";
 import {ProviderResponse} from "./interfaces";
+import Axios from "axios";
+import * as querystring from "querystring";
+import {logError} from "../core/logger";
+import {createProviderResponder} from "../core/response";
 
-let token = "";
+let authToken = "";
 
 interface SpotifyResponse {
     tracks: {
@@ -29,79 +30,83 @@ interface SpotifyAuthResponse {
     "expires_in": number;
 }
 
-function getAuth(): Bluebird<boolean> {
+const spotifyAccountApi = Axios.create({
+    baseURL: "https://accounts.spotify.com/api",
+
+});
+
+const spotifyApi = Axios.create({
+    baseURL: "https://api.spotify.com/v1",
+});
+
+const makeResponse = createProviderResponder("Spotify");
+
+async function autenthicate(): Promise<boolean> {
     // <base64 encoded client_id:client_secret>
     const keys = `${config.get("spotify.clientId")}:${config.get("spotify.clientSecret")}`;
     const encodedKeys = base64.encode(utf8.encode(keys));
-    return request({
-        method: "POST",
-        uri: "https://accounts.spotify.com/api/token",
-        form: {
-            grant_type: "client_credentials"
-        },
-        headers: {
-            "Authorization": `Basic ${encodedKeys}`,
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        json: true
-    }).then((response: SpotifyAuthResponse) => {
-        token = response.access_token;
+
+    const requestParams = querystring.stringify({
+        grant_type: "client_credentials"
+    });
+
+    try {
+        const authResult = await spotifyAccountApi.post<SpotifyAuthResponse>("token", requestParams, {
+            headers: {
+                "Authorization": `Basic ${encodedKeys}`,
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
+
+        authToken = authResult.data.access_token;
         const oneMinute = 60;
         const msInMin = 1000;
-        const reAuthDelay = response.expires_in - oneMinute;
+        const reAuthDelay = authResult.data.expires_in - oneMinute;
         setTimeout(() => {
-            token = "";
+            authToken = "";
         }, reAuthDelay * msInMin);
         return true;
-    }).catch((err) => {
+    } catch (e) {
+        logError("Spotify Auth", e);
         return false;
-    });
+    }
 }
 
-export function SearchSpotify(songname: string): Bluebird<ProviderResponse> {
-    if (!token) {
-        return getAuth().then((res) => {
-            if (res) {
-                return SearchSpotify(songname);
-            } else {
-                return {
-                    url: `Spotify: ${Dictionary.request_error}`,
-                    albumCover: artwork
-                };
-            }
-        });
-    }
-    const formattedName = formatQuery(songname);
-    const requestUrl = `https://api.spotify.com/v1/search?q=${formattedName}&type=track&limit=1`;
-    let artwork = "";
-    return request.get(requestUrl, {
-        headers: {
-            Authorization: `Bearer ${token}`
+export async function SearchSpotify(songName: string): Promise<ProviderResponse> {
+    if (!authToken) {
+        if (await autenthicate()) {
+            return SearchSpotify(songName);
+        } else {
+            return makeResponse(Dictionary.request_error);
         }
-    })
-        .then((res: string) => {
-            try {
-                const parsedRes = JSON.parse(res) as SpotifyResponse;
-                if (parsedRes.tracks.total) {
-                    if (parsedRes.tracks.items[0].album.images[0]) {
-                        artwork = parsedRes.tracks.items[0].album.images[0].url;
-                    }
-                    return parsedRes.tracks.items[0].external_urls.spotify;
-                } else {
-                    return Dictionary.no_result;
-                }
-            } catch (e) {
-                return Dictionary.parsing_error;
-            }
+    }
 
-        })
-        .catch(() => {
-            return Dictionary.request_error;
-        })
-        .then((result) => {
-            return {
-                url: formatResponse("Spotify", result),
-                albumCover: artwork
-            };
+    try {
+        const tracksResponse = await spotifyApi.get<SpotifyResponse>("search", {
+            params: {
+                q: songName,
+                type: "track",
+                limit: 1,
+            },
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+            }
         });
+
+        const tracks = tracksResponse.data.tracks;
+
+        if (tracks.total) {
+            const artwork = tracks.items[0].album.images[0]
+                ? tracks.items[0].album.images[0].url
+                : "";
+            const url = tracks.items[0].external_urls.spotify;
+
+            return makeResponse(url, artwork);
+        } else {
+            return makeResponse(Dictionary.no_result);
+        }
+    } catch (e) {
+        logError("Spotify", e);
+        return makeResponse(Dictionary.request_error);
+    }
 }
