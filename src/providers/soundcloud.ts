@@ -1,5 +1,5 @@
 import {ProviderResponse} from "./interfaces";
-import {formatResponse} from "../formatter";
+import {makeProviderResponse} from "../core/response";
 import * as qs from "qs";
 
 function makeSearchLink(query: string): string {
@@ -11,12 +11,8 @@ function makeSearchLink(query: string): string {
     return `${url}?${params}`;
 }
 
-export function SearchSoundCloud(songName: string):  Promise<ProviderResponse> {
-    return Promise.resolve()
-        .then(() => {
-            return {
-                url: formatResponse("SoundCloud", makeSearchLink(songName)),
-                albumCover: ""
-            };
-        });
+export function SearchSoundCloud(songName: string): Promise<ProviderResponse> {
+    return Promise.resolve(
+        makeProviderResponse("SoundCloud", makeSearchLink(songName))
+    );
 }

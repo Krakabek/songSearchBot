@@ -1,7 +1,8 @@
-import {Dictionary} from "../dictionary";
-import {formatResponse} from "../formatter";
 import {ProviderResponse} from "./interfaces";
 import Axios from "axios";
+import {Dictionary} from "../core/dictionary";
+import {createProviderResponder} from "../core/response";
+import {logError} from "../core/logger";
 
 interface ResultsEntry {
     wrapperType: string;
@@ -84,39 +85,30 @@ const appleMusic = Axios.create({
     baseURL: "https://itunes.apple.com",
 });
 
-export function SearchAMusic(songName: string): Promise<ProviderResponse> {
-    let artwork = "";
+const makeResponse = createProviderResponder("Apple Music");
 
-    const searchTrack = appleMusic.get<ItunesResponse>(`/search`, {
-        params: {
-            term: songName,
-            country: "ua",
-        }
-    });
-
-    return searchTrack
-        .then((result) => result.data)
-        .then((parsedResult: ItunesResponse) => {
-            if (parsedResult.resultCount) {
-                const track = getMatchingEntryFromResult(songName, parsedResult.results);
-
-                if (track) {
-                    artwork = track.artworkUrl100;
-                    return track.trackViewUrl;
-                } else {
-                    return Dictionary.no_result;
-                }
-            } else {
-                return Dictionary.no_result;
+export async function SearchAMusic(songName: string): Promise<ProviderResponse> {
+    try {
+        const tracks = await appleMusic.get<ItunesResponse>(`/search`, {
+            params: {
+                term: songName,
+                country: "ua",
             }
-        })
-        .catch(() => {
-            return Dictionary.request_error;
-        })
-        .then((result: string) => {
-            return {
-                url: formatResponse("Apple Music", result),
-                albumCover: artwork
-            };
         });
+
+        if (tracks.data.resultCount) {
+            const track = getMatchingEntryFromResult(songName, tracks.data.results);
+
+            if (track) {
+                return makeResponse(track.trackViewUrl, track.artworkUrl100);
+            } else {
+                return makeResponse(Dictionary.no_result);
+            }
+        }
+    } catch (e) {
+        logError("Apple Music", e);
+        return makeResponse(Dictionary.request_error);
+    }
+
+    return makeResponse(Dictionary.no_result);
 }
