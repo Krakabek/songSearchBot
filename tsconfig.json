@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
-    "noImplicitAny": true,
-    "strictNullChecks": true,
+    "target": "es2017",
+    "strict": true,
     "preserveConstEnums": true,
     "importHelpers": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
     "outDir": "dist"
   },
   "include": [
