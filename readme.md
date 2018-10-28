@@ -7,6 +7,8 @@ This bot is used for sharing song with given name via several services at once.
 If you want to test it locally, you should create own bot via Telegram's @botfather
 Don't forget to enable inline mode
 
+You will also need to create Spotify account and get clientId and clientSecret if
+you want to fix/improve Spotify related code
 
 ### Installing
 
@@ -36,8 +38,9 @@ This project has TS-lint enabled so you will be warned if you are breaking the l
 You can run this bot on any computer or dedicated server with no affect on end user experience.
 The only point is that srcipt should be up 24/7 or bot will respond with delays, which is annoying
 
-
 ## Contributing
+
+Tip: you can comment out services that you are no working on right now.
 
 Please read CONTRIBUTING.md
 
