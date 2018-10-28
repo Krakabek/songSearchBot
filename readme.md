@@ -1,6 +1,21 @@
 # Song Sharing-Link Telegram Bot
 
 This bot is used for sharing song with given name via several services at once.
+You can find it by name @SongLinkBot in Telegram
+
+### Usage examples
+1. In DM with bot you can use `/songlink` command to get sharing links
+```
+/songlink Pink Floyd - Have a Cigar
+```
+2. Via inline mode in any chat just start your message with @SongLinkBot and then paste song name
+Bot will show preview of song he found. Click on preview to send sharing links into chat
+```
+@SongLinkBot Pink Floyd - Have a Cigar
+```
+
+NB!: If you use inline mode, you should not SEND message, wait for suggestion and then click on preview
+
 
 ## Getting Started
 
