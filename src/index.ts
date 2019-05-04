@@ -21,15 +21,18 @@ const getServices = (songName: string) => [
     SearchYoutube(songName)
 ];
 
+const shutDownWarning = "**WARNING: SongLinkBot will be shut down soon\nWe ran out of free hosting plan\n\n**";
+
 bot.hears(commandRegexp, (ctx: any) => {
     const songName = ctx.message.text.replace(commandRegexp, "");
 
     console.warn(`==> request: ${songName} | ${new Date()}`);
 
     Promise.all(getServices(songName)).then((results) => {
+        let responseHeading = shutDownWarning + songName + ":\n";
         const reply = results.reduce((buffer, res) => {
             return buffer + res.url + "\n";
-        }, songName + ":\n");
+        }, responseHeading);
         ctx.reply(reply, {
             parse_mode: "Markdown",
             disable_web_page_preview: true
@@ -58,7 +61,7 @@ bot.on("inline_query", (ctx: any) => {
         const answer = [{
             type: "article",
             id: `song:${songName}`,
-            title: songName,
+            title: shutDownWarning + songName,
             input_message_content: {
                 message_text: reply,
                 parse_mode: "Markdown",
