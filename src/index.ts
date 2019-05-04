@@ -2,9 +2,9 @@ import * as config from "config";
 import * as Telegraf from "telegraf";
 import {SearchAMusic} from "./providers/apple-music";
 import {SearchGMusic} from "./providers/google-play";
+import {SearchSoundCloud} from "./providers/soundcloud";
 import {SearchSpotify} from "./providers/spotify";
 import {SearchYoutube} from "./providers/youtube";
-import {SearchSoundCloud} from "./providers/soundcloud";
 
 const packageConfig = require("../package.json");
 
@@ -33,7 +33,7 @@ bot.hears(commandRegexp, async (ctx: any) => {
     const searchResult = await Promise.all(getServices(songName));
 
     let responseHeading = shutDownWarning + songName + ":\n";
-        const reply = searchResult.reduce((buffer, res) => {
+    const reply = searchResult.reduce((buffer, res) => {
         return buffer + res.url + "\n";
     }, responseHeading);
 
@@ -55,17 +55,18 @@ bot.on("inline_query", async (ctx: any) => {
     const searchResult = await Promise.all(getServices(songName));
 
     let thumbnail = "";
+    let responseHeading = shutDownWarning + songName + ":\n";
     const reply = searchResult.reduce((buffer, res) => {
         if (res.albumCover && !thumbnail) {
             thumbnail = res.albumCover;
         }
         return buffer + res.url + "\n";
-    }, songName + ":\n");
+    }, responseHeading);
 
     const answer = [{
         type: "article",
         id: `song:${songName}`,
-        title: shutDownWarning + songName,
+        title: songName,
         input_message_content: {
             message_text: reply,
             parse_mode: "Markdown",
